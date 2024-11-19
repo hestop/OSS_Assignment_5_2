@@ -1,13 +1,173 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.body {
+  font-family: 'Roboto', sans-serif;
+  background-color: rgb(243, 243, 245);
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.card-img-top {
+  height: 280px;
+  object-fit: contain;
+}
+
+.card-img-top-mari {
+  height: 280px;
+  padding-top: 20px;
+  object-fit: contain;
+}
+
+.card-img-top-lr {
+  height: 280px;
+  object-fit: contain;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.top-mar {
+  height: 525px;
+}
+
+.top-banner {
+  position: relative;
+  color: white;
+  text-align: center;
+  background-image: url('https://raw.githubusercontent.com/hestop/OSS_Assignment_4/refs/heads/main/img/bg1.png');
+  background-size: cover;
+  background-position: center;
+  padding-top: 200px;
+  padding-bottom: 200px;
+}
+
+.top-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.top-banner h1 {
+  position: relative;
+  z-index: 1;
+}
+
+.top-banner .btn {
+  position: relative;
+  z-index: 1;
+  margin-top: 20px;
+  font-weight: 800;
+}
+
+.top-banner .btn:hover {
+  background: none;
+  color: white;
+}
+.foot {
+  position: relative;
+  height: 900px;
+  background-image: url('https://raw.githubusercontent.com/hestop/OSS_Assignment_4/refs/heads/main/img/footer-image.jpg');
+  background-size: cover;
+  background-position: center;
+  font-size: large;
+  color: white;
+  padding: 10px;
+}
+.navbar {
+  margin-bottom: 20px;
+}
+.btn-custom {
+  background-color: navy;
+  color: white;
+  width: 80px;
+  padding: 3px;
+  margin: 3px;
+  padding-left: 0px;
+}
+
+.btn-delete {
+  background-color: transparent !important;
+  color: #b21f2d !important;
+  border: 2px solid #b21f2d !important;
+}
+
+.btn-delete:hover {
+  background-color: #b21f2d !important;
+  color: white !important;
+}
+
+.btn-edit {
+  background-color: transparent !important;
+  color: #004085 !important;
+  border: 2px solid #004085 !important;
+}
+
+.btn-edit:hover {
+  background-color: #004085 !important;
+  color: white !important;
+}
+
+.edit-modal,
+.add-modal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  z-index: 1000;
+  width: 80%;
+  max-width: 500px;
+}
+
+.modal-overlay,
+.modal-overlay-add {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 999;
+}
+
+.form-container {
+  background-color: white;
+  padding: 35px;
+  padding-top: 50px;
+  padding-bottom: 70px;
+  border-radius: 10px;
+  margin-top: 70px;
+  margin-bottom: 90px;
+}
+
+.input-group .form-select {
+  max-width: 80px;
+}
+
+.btn-set {
+  margin-top: 30px;
+  width: 110px;
+}
+
+.is-valid {
+  border-color: green !important;
+  outline: 1.7px solid green !important;
+}
+
+.is-invalid {
+  border-color: red !important;
+  outline: 1.7px solid red !important;
+}
+
+.is-invalid::placeholder {
+  color: red !important;
+}
+
+.modal-btn {
+  margin-left: 10px !important;
+  margin-right: 10px !important;
 }

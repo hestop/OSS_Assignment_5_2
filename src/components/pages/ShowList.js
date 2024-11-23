@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import GearList from '../GearList.js';
 import EditModal from '../EditModal.js';
 import AddModal from '../AddModal.js';
@@ -6,133 +8,170 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import "../../index.css";
 
-
-function ShowList() {
+function ShowList({ showAddModal = false, showEditModal = false }) {
   const [gearData, setGearData] = useState([]);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [currentGear, setCurrentGear] = useState(null);
-  const [showAddModal, setShowAddModal] = useState(false);
-
-  const API_URL = 'https://6729689c6d5fa4901b6d0b4f.mockapi.io/my_data';
+  const [editGear, setEditGear] = useState(null);
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const location = useLocation();
 
   useEffect(() => {
     loadGearData();
   }, []);
 
+  useEffect(() => {
+    if (location.pathname.startsWith('/update')) {
+      if (id && gearData.length > 0) {
+        const gearItem = gearData.find((gear) => gear.id === id);
+        if (gearItem) {
+          setEditGear(gearItem);
+        } else {
+          // 아이템을 찾지 못한 경우
+          alert('해당 아이템을 찾을 수 없습니다.');
+          navigate('/index');
+        }
+      }
+    } else {
+      setEditGear(null);
+    }
+  }, [id, location.pathname, gearData, navigate]);
+
   const loadGearData = () => {
-    fetch(API_URL)
-      .then(response => response.json())
-      .then(data => setGearData(data))
-      .catch(error => console.error('Error fetching data:', error));
+    axios
+      .get('https://6729689c6d5fa4901b6d0b4f.mockapi.io/my_data')
+      .then((response) => {
+        setGearData(response.data);
+      })
+      .catch((error) => {
+        console.error('Error loading gear data:', error);
+      });
   };
 
-  const handleDeleteGear = (id) => {
-    if (window.confirm('Are you sure you want to delete this item?')) {
-      fetch(`${API_URL}/${id}`, { method: 'DELETE' })
-        .then(response => {
-          if (response.ok) {
-            setGearData(gearData.filter(gear => gear.id !== id));
-          } else {
-            alert('Failed to delete the gear item.');
-          }
+  const deleteGear = (id) => {
+    if (window.confirm('정말로 이 아이템을 삭제하시겠습니까?')) {
+      axios
+        .delete(`https://6729689c6d5fa4901b6d0b4f.mockapi.io/my_data/${id}`)
+        .then(() => {
+          setGearData((prevData) => prevData.filter((gear) => gear.id !== id));
         })
-        .catch(error => console.error('Error deleting gear:', error));
+        .catch((error) => {
+          console.error('Error deleting gear:', error);
+        });
     }
   };
 
-  const handleOpenEditModal = (gear) => {
-    setCurrentGear(gear);
-    setShowEditModal(true);
-  };
-
-  const handleCloseEditModal = () => {
-    setShowEditModal(false);
-    setCurrentGear(null);
-  };
-
-  const handleUpdateGear = (updatedGear) => {
-    fetch(`${API_URL}/${updatedGear.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(updatedGear)
-    })
-      .then(response => response.json())
-      .then(data => {
-        setGearData(gearData.map(gear => (gear.id === data.id ? data : gear)));
-        handleCloseEditModal();
-      })
-      .catch(error => console.error('Error updating gear:', error));
-  };
-
   const handleOpenAddModal = () => {
-    setShowAddModal(true);
+    navigate('/add');
   };
 
   const handleCloseAddModal = () => {
-    setShowAddModal(false);
+    navigate('/index');
   };
 
   const handleAddGear = (newGear) => {
-    fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(newGear)
-    })
-      .then(response => response.json())
-      .then(data => {
-        setGearData([...gearData, data]);
+    axios
+      .post('https://6729689c6d5fa4901b6d0b4f.mockapi.io/my_data', newGear)
+      .then((response) => {
+        setGearData((prevData) => [...prevData, response.data]);
         handleCloseAddModal();
       })
-      .catch(error => console.error('Error adding gear:', error));
+      .catch((error) => {
+        console.error('Error adding gear:', error);
+      });
+  };
+
+  const handleOpenEditModal = (gear) => {
+    navigate(`/update/${gear.id}`);
+  };
+
+  const handleCloseEditModal = () => {
+    setEditGear(null);
+    navigate('/index');
+  };
+
+  const handleUpdateGear = (updatedGear) => {
+    setGearData((prevData) =>
+      prevData.map((gear) => (gear.id === updatedGear.id ? updatedGear : gear))
+    );
+    handleCloseEditModal();
   };
 
   return (
-    <div>
+    <>
       <div className="top-banner top-mar">
         <h1 className="text-center">My Backpacking Gears</h1>
       </div>
-
+      {/* 네비게이션 바 */}
       <nav className="navbar navbar-expand-sm bg-black navbar-dark">
         <div className="container-fluid">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <button className="nav-link btn" onClick={handleOpenAddModal}>Add</button>
+              <button className="nav-link btn" onClick={handleOpenAddModal}>
+                Add
+              </button>
+            </li>
+          </ul>
+          <ul className="navbar-nav ms-auto">
+            <li className="nav-item">
+              <a className="nav-link" href="#">
+                <i className="bi bi-person"></i> Your Account
+              </a>
             </li>
           </ul>
         </div>
       </nav>
 
+      {/* 기어 리스트 */}
       <div className="container mt-5">
-        <GearList
-          gearData={gearData}
-          onDeleteGear={handleDeleteGear}
-          onEditGear={handleOpenEditModal}
-        />
+        <div className="row" id="gearContainer">
+          {gearData.map((gear) => (
+            <div key={gear.id} className="col-sm-12 col-md-6 col-lg-3 mb-4">
+              <div className="card h-100 shadow-sm">
+                <div className="card-header bg-darkgray text-black fw-bold">
+                  {gear.name}
+                </div>
+                <img src={gear.image} className="card-img-top" alt={gear.name} />
+                <div className="card-body">
+                  <ul className="list-unstyled">
+                    <li>Category: {gear.category}</li>
+                    <li>Weight: {gear.weight}g</li>
+                    <li>Material: {gear.material}</li>
+                    <li>Price: ${gear.price}</li>
+                    <li>Feature: {gear.feature}</li>
+                  </ul>
+                  <button
+                    onClick={() => deleteGear(gear.id)}
+                    className="btn btn-delete btn-custom rounded me-2"
+                  >
+                    Delete
+                  </button>
+                  <button
+                    onClick={() => handleOpenEditModal(gear)}
+                    className="btn btn-edit btn-custom rounded"
+                  >
+                    Edit
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {showEditModal && currentGear && (
+      {/* 추가 모달 */}
+      {location.pathname === '/add' && (
+        <AddModal onClose={handleCloseAddModal} onSave={handleAddGear} />
+      )}
+
+      {/* 수정 모달 */}
+      {editGear && (
         <EditModal
-          gear={currentGear}
+          gear={editGear}
           onClose={handleCloseEditModal}
           onSave={handleUpdateGear}
         />
       )}
-
-      {showAddModal && (
-        <AddModal
-          onClose={handleCloseAddModal}
-          onSave={handleAddGear}
-        />
-      )}
-
-      <footer className="foot text-white text-center d-flex align-items-center justify-content-center">
-        <p>My Backpacking Gears &copy; 2024</p>
-      </footer>
-    </div>
+    </>
   );
 }
 

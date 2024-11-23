@@ -25,7 +25,6 @@ function ShowList({ showAddModal = false, showEditModal = false }) {
         if (gearItem) {
           setEditGear(gearItem);
         } else {
-          // 아이템을 찾지 못한 경우
           alert('해당 아이템을 찾을 수 없습니다.');
           navigate('/index');
         }
@@ -100,7 +99,6 @@ function ShowList({ showAddModal = false, showEditModal = false }) {
       <div className="top-banner top-mar">
         <h1 className="text-center">My Backpacking Gears</h1>
       </div>
-      {/* 네비게이션 바 */}
       <nav className="navbar navbar-expand-sm bg-black navbar-dark">
         <div className="container-fluid">
           <ul className="navbar-nav">
@@ -113,7 +111,6 @@ function ShowList({ showAddModal = false, showEditModal = false }) {
         </div>
       </nav>
 
-      {/* 기어 리스트 */}
       <div className="container mt-5">
         <div className="row" id="gearContainer">
           {gearData.map((gear) => (
@@ -150,12 +147,10 @@ function ShowList({ showAddModal = false, showEditModal = false }) {
         </div>
       </div>
 
-      {/* 추가 모달 */}
       {location.pathname === '/add' && (
         <AddModal onClose={handleCloseAddModal} onSave={handleAddGear} />
       )}
 
-      {/* 수정 모달 */}
       {editGear && (
         <EditModal
           gear={editGear}

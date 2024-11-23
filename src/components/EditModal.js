@@ -70,11 +70,10 @@ function EditModal({ gear, onClose, onSave }) {
       feature: formData.feature.trim()
     };
 
-    // API에 PUT 요청 보내기
     axios
       .put(`https://6729689c6d5fa4901b6d0b4f.mockapi.io/my_data/${gear.id}`, updatedGear)
       .then((response) => {
-        onSave(response.data); // 상위 컴포넌트에 업데이트된 데이터를 전달
+        onSave(response.data);
       })
       .catch((error) => {
         console.error('Error updating gear:', error);

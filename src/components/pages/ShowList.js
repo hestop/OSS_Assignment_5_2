@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import GearList from '../GearList.js';
 import EditModal from '../EditModal.js';
 import AddModal from '../AddModal.js';
 import 'bootstrap/dist/css/bootstrap.min.css';

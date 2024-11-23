@@ -110,13 +110,6 @@ function ShowList({ showAddModal = false, showEditModal = false }) {
               </button>
             </li>
           </ul>
-          <ul className="navbar-nav ms-auto">
-            <li className="nav-item">
-              <a className="nav-link" href="#">
-                <i className="bi bi-person"></i> Your Account
-              </a>
-            </li>
-          </ul>
         </div>
       </nav>
 
